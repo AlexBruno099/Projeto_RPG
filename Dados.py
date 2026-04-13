@@ -1,13 +1,20 @@
 from random import randint
-from Dados import Personagem
-from Dados import Historia
+from Personagens import Personagem
 
 
-nomeJogador = Historia()
-jogador = Personagem(nomeJogador, 50, 10, 10, 1)
-inimigo = Personagem('Inimigo Fudido', randint(45,55), randint(5,15), randint(5,15), 1)
+def CriaJogador():
+    global jogador
+    from Historias import Historia
+    nomeJogador = Historia()
+    jogador = Personagem(nomeJogador, 50, 10, 10, 1)
+    return jogador
+    
 
+def criaInimigo():
+    inimigo = Personagem('Inimigo', randint(jogador.vida-5,jogador.vida+5), randint(jogador.ataque-5,jogador.ataque+5), randint(jogador.defesa-5,jogador.defesa+5), jogador.lvl)
+    return inimigo
 
+inimigo = criaInimigo()
 
 def ataqueJogador():
     rolarAtaqueJogador = input('Deseja rolar o dado de ataque? [Sim/Não]').upper()
@@ -30,7 +37,5 @@ def atacaInimigo():
         print(f'Inimigo não atacado, defesa maior que ataque\nDefesa: {inimigo.defesa}')
 
 # ataqueJogador()
-atacaInimigo()
+print(inimigo)
 
-
-print('TOP ALTERAÇÕES')
