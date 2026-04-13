@@ -31,3 +31,6 @@ def atacaInimigo():
 
 # ataqueJogador()
 atacaInimigo()
+
+
+print('TOP ALTERAÇÕES')
