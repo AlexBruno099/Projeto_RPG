@@ -1,6 +1,6 @@
 from random import randint
-from Personagens.index import Personagem
-from Historia.index import Historia
+from Dados import Personagem
+from Dados import Historia
 
 
 nomeJogador = Historia()

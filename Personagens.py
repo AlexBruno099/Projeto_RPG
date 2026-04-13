@@ -1,4 +1,4 @@
-from Historia.index import Historia
+from Dados import Historia
 from random import randint
 
 class Personagem:
