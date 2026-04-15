@@ -3,7 +3,7 @@ from Personagens import Personagem
 from Historias import Historia
 
 # def criaInimigo(jogador_atual):
-#     inimigo = Personagem('Inimigo Orc', randint(jogador_atual.vida - 5, jogador_atual.vida + 5), randint(jogador_atual.ataque - 5, jogador_atual.ataque + 5), randint(jogador_atual.defesa - 5, jogador_atual.defesa + 5), jogador_atual.lvl)
+#     inimigo = Personagem('Inimigo Orc', randint(jogador_atual.vida -   5, jogador_atual.vida + 5), randint(jogador_atual.ataque - 5, jogador_atual.ataque + 5), randint(jogador_atual.defesa - 5, jogador_atual.defesa + 5), jogador_atual.lvl)
 #     return inimigo
 
 def criaInimigo(jogador_atual):
@@ -14,7 +14,7 @@ def InimigoAtaca(inimigo_atual, jogador_atual):
         dado = randint(0,5)
         ataque = inimigo_atual.ataque + dado
         if ataque > jogador_atual.defesa:
-            print(f'Valor do dado: {dado} | Valor do ataque: {jogador_atual.ataque} | Resultado total do ataque: {ataque}\nDefesa do jogador: {jogador_atual.defesa}\nVida do jogador antes do ataque: {jogador_atual.vida}')
+            print(f'\nValor do dado: {dado} | Valor do ataque: {jogador_atual.ataque} | Resultado total do ataque: {ataque}\nDefesa do jogador: {jogador_atual.defesa}\nVida do jogador antes do ataque: {jogador_atual.vida}')
             jogador_atual.vida -= ataque
             print(f'Defesa do jogador: {jogador_atual.defesa}\nVida pós ataque: {jogador_atual.vida}')
         else:
@@ -22,13 +22,13 @@ def InimigoAtaca(inimigo_atual, jogador_atual):
 
 
 def ataqueJogador(jogador_atual):
-    rolarAtaqueJogador = input('Deseja rolar o dado de ataque? [Sim/Não]').upper()
+    rolarAtaqueJogador = input('\nDeseja rolar o dado de ataque? [Sim/Não]\n').upper()
     if rolarAtaqueJogador == 'SIM':
         dado = randint(0,5)
         ataque = jogador_atual.ataque + dado
         return ataque
     else:
-        print('Foje bot noob')
+        print('\nFoje bot noob')
 
 
 def atacaInimigo(jogador_atual, inimigo_atual):
@@ -70,16 +70,27 @@ nome, aceitou_jogar = Historia()
 
 if aceitou_jogar:
     jogador = Personagem(nome, 50, 10, 10, 1)
-    inimigo = Personagem('nome', 1,1,1,0)
+    inimigo = Personagem('nome', 20,1,10,0)
     
     while jogador.lvl < 10:
         if inimigo.vida <= 0:
             inimigo = criaInimigo(jogador)
     
         print(f"\nUm {inimigo.nome} bloqueia o seu caminho!")
-    
-        atacaInimigo(jogador, inimigo)
-        InimigoAtaca(inimigo, jogador)
+
+        while inimigo.vida > 0 and jogador.vida > 0:
+            atacaInimigo(jogador, inimigo)
+
+            if inimigo.vida <= 0:
+                print(f"{inimigo.nome} foi derrotado!")
+                break
+
+            InimigoAtaca(inimigo, jogador)
+
+            if jogador.vida <= 0:
+                print("Você morreu!")
+                break
+
 
 
 else:
