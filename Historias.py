@@ -1,9 +1,10 @@
 from time import sleep
 
+
 def digitar(texto):
     for i in texto:
         print(i, end='', flush=True)
-        sleep(0.02) 
+        sleep(0.00) 
 
 def Historia():
     print('-*' * 10)
@@ -19,6 +20,7 @@ def Historia():
     digitar('ALDEÃO:\nOlá nobre cavaleiro(a)\nA cidade Genubia está sofrendo por varias perdas na guerra, estamos em uma batalha intensa seguida por meses de cerco, por conta disso estamos sem alimento na aldeia.\n')
     
     nome_jogador = input("\nQual é seu nome, cavaleiro(a)?\n").strip()
+    
     sleep(1)
     
     print('\nPOWWWWWW')
