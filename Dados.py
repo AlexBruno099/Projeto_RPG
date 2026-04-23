@@ -3,37 +3,59 @@ from random import randint
 from Personagens import Personagem
 from Historias import Historia
 import os
-from Hud import hudBatalha, hudDefesa, hudErraAtaque, hudMorreu, hudNaoAjudou
+from Hud import hudBatalha, hudDefesa, hudErraAtaque, hudMorreu, hudNaoAjudou, hudCinemaAbsoluto
 
-# Funçaõ pra limpar os dados da tela
+# Função pra limpar os dados da tela
 def LimpaTela():
     os.system('cls')
 
+#Função para mostrar a barra de vida no hud de batalha
+def barra_vida(nome, vida, vida_max):
+    tamanho_barra = 20
+    vida_ratio = vida / vida_max
+    preenchido = int(tamanho_barra * vida_ratio)
+    
+    barra = '█' * preenchido + '-' * (tamanho_barra - preenchido)
+    
+    print(f'{nome}: [{barra}] {vida}/{vida_max}')
+
+
+#Função de status para batalha
+def hudStatus(jogador, inimigo):
+    print("\n" + "="*50)
+    print("⚔️  BATALHA ⚔️")
+    print("="*50)
+    
+    barra_vida(jogador.nome, jogador.vida, jogador.vida_Max)
+    barra_vida(inimigo.nome, inimigo.vida, inimigo.vida_Max)
+    
+    print("="*50 + "\n")
+
 # Função pra criar os inimigos, com base nos dados do jogador
 def criaInimigo(jogador_atual):
-    inimigo = Personagem('Inimigo Orc', randint(jogador_atual.vida -10, jogador_atual.vida - 9), randint(jogador_atual.ataque -1, jogador_atual.ataque + 1), randint(jogador_atual.defesa - 5, jogador_atual.defesa + 5), jogador_atual.lvl)
+    inimigo = Personagem('Inimigo Orc', randint(jogador_atual.vida -5, jogador_atual.vida + 5), randint(jogador_atual.ataque -5, jogador_atual.ataque + 5), randint(jogador_atual.defesa - 5, jogador_atual.defesa + 5), jogador_atual.lvl)
     return inimigo
 
 
 # Função onde o inimigo ataca o jogador
 def InimigoAtaca(inimigo_atual, jogador_atual):
         sleep(1)
+        sleep(1)
         LimpaTela()
-        sleep(1)
-        print(f'O inimigo {inimigo.nome} vai te atacar!')
-        sleep(1)
+        print(f'O inimigo {inimigo_atual.nome} vai te atacar!')
         dado = randint(0,5)
         ataque = inimigo_atual.ataque + dado
         dadoDefesa = randint(0,5)
         defesa = jogador.defesa + dadoDefesa
         if ataque > defesa:
-            hudBatalha()
             dano = ataque - defesa
             jogador_atual.vida -= dano
-            print(f'\n- Valor do dado do ataque: {dado}\n- Valor do ataque do inimigo: {inimigo_atual.ataque}\n- Resultado total do ataque: {ataque}\n- Valor do dado da defesa: {dadoDefesa}\n- Defesa do jogador: {jogador_atual.defesa}\n- Defesa total: {defesa}\n- Vida do jogador antes do ataque: {jogador_atual.vida+dano}\n- Vida pós ataque: {jogador_atual.vida}')
+            hudStatus(jogador_atual, inimigo_atual)
+            hudBatalha()
         else:
+            hudStatus(jogador_atual, inimigo_atual)
             hudDefesa()
-            print(f'Jogador não atacado, defesa maior que ataque\n- Defesa do jogador: {jogador_atual.defesa}\n- Ataque inicial: {inimigo_atual.ataque}\n- Dado: {dado}\n- Ataque total: {ataque}')
+            print(f'Jogador não atacado, defesa maior que ataque')
 
 # Função pra questionar se o jogador deseja atacar
 def ataqueJogador(jogador_atual):
@@ -54,16 +76,17 @@ def atacaInimigo(jogador_atual, inimigo_atual):
     dadoDefesa = randint(0,5)
     defesa = inimigo_atual.defesa + dadoDefesa
     if ataqueRodada1 > defesa:
-        hudBatalha()
-        sleep(0.5)
         dano = ataqueRodada1 - inimigo_atual.defesa
         inimigo_atual.vida -= dano
-        print(f'Defesa do inimigo: {inimigo_atual.defesa}\nVida pós ataque: {inimigo_atual.vida}')
+        hudStatus(jogador_atual, inimigo_atual)
+        hudBatalha()
+        sleep(0.5)
         input('Pressione ENTER para continuar...')
     else:
+        hudStatus(jogador_atual, inimigo_atual)
         hudErraAtaque()
-        print(f'Inimigo não atacado, defesa maior que ataque\nDefesa: {inimigo_atual.defesa}\nAtaque do jogador: {jogador_atual.ataque + dado}')
-        input('Pressione ENTER paraontinuar...')
+        print(f'Inimigo não atacado, defesa maior que ataque.')
+        input('Pressione ENTER para continuar...')
 
 
     def validaVidaInimigo(inimigo_atual):
@@ -81,26 +104,26 @@ def atacaInimigo(jogador_atual, inimigo_atual):
             jogador_atual.vida = jogador_atual.vida_Max
             jogador_atual.defesa += 2
             jogador_atual.ataque += 2
-            print(f'Parabéns, você avançou para o nível {jogador_atual.lvl}\nVocê ganhou também atributos novos\n- Vida: {jogador_atual.vida}\n- Ataque: {jogador_atual.ataque}\n- Defesa: {jogador_atual.defesa}')
+            LimpaTela()
+            print(f'✨Parabéns {jogador_atual.nome}✨\nVocê avançou para o nível {jogador_atual.lvl}\nVocê ganhou também atributos novos\n- Vida: {jogador_atual.vida}\n- Ataque: {jogador_atual.ataque}\n- Defesa: {jogador_atual.defesa}')
+            sleep(3.5)
             return jogador_atual.lvl
 
-    def seita(jogador_atual):
-        if jogador_atual.lvl == 5:
-            print('SEITA')
         
     sobeNivel(jogador_atual, inimigo_atual)
-    seita(jogador_atual)
 
 
 nome, aceitou_jogar = Historia()
 
 if aceitou_jogar:
-    jogador = Personagem(nome, 50, 50, 10, 1)
+    jogador = Personagem(nome, 50, 10, 10, 1)
     inimigo = criaInimigo(jogador)
-    
-    while jogador.lvl < 10:
+    count = 1
+    while jogador.lvl < 20:
         if inimigo.vida <= 0:
             inimigo = criaInimigo(jogador)
+            count += 1
+            print(f'O inimigo {count} está vindo!')
     
         print(f"\nUm {inimigo.nome} bloqueia o seu caminho!")
 
@@ -119,6 +142,9 @@ if aceitou_jogar:
             if jogador.vida <= 0:
                 hudMorreu()
                 break
-
+    LimpaTela()
+    print('ALDEÕES:')
+    print('Obrigado(a), você salvou nossa vida.\nAgora lhe entregamos nossa vila para você comandar e nos guiar para proxima batalha.')           
+    hudCinemaAbsoluto()
 else:
     hudNaoAjudou()
